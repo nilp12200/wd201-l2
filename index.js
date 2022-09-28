@@ -1,30 +1,24 @@
 const http = require("http");
 const fs = require("fs");
+const  minimist = require('minimist');
+const { argv } = require("process");
 
-var port = require("minimist")(process.argv.slice(2),{
-    default:{
-        greeting:"Hello",
-    },
-});
+var port = 3000;
+var args =  minimist(process.argv.slice(2));
+if(args.port != undefined)
+    port = args.port;
+
+// console.log("PORT:::" + port);
 
 let homeContent = "";
 let projectContent = "";
 let registrarionContent = "";
-// fs.readFile("home.html",(err, home) => {
-    // console.log(home.toString());
-// });
+
 fs.readFile("home.html", (err, home)=>{
     if(err){
         throw err;
     }
     homeContent=home;
-    // http
-    // .createServer((request,response)=>{
-    //     response.writeHeader(200, {"Content-Type":"text/html" });
-    //     response.write(home);
-    //     response.end();
-    // })
-    // .listen(3000);
 });
 fs.readFile("project.html", (err,project)=>{
     if(err) {
@@ -37,7 +31,8 @@ fs.readFile("registration.html", (err,registration)=>{
         throw err;
     }
     registrarionContent=registration;
-})
+});
+
 http.createServer((request,response)=>{
         let url = request.url;
         response.writeHeader(200, { "Content-Type":"text/html" });
